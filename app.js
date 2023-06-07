@@ -58,6 +58,7 @@ app.use((request, response, next) => {
     User.findById(request.session.user._id).then(user => {
         //    console.log(user);
         request.user = user;
+
         next();
         
     }).catch(error => {

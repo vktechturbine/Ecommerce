@@ -5,12 +5,13 @@
     /* background-color: red; */
     align-items: center;
     text-align: center;
-    
+    margin-top:2px;
     position: absolute;
    
 } 
 .containers .image2{
-    width: 70%;
+    width: 200px;
+    height: 300px;
     padding:25px;
     margin-left: 15%;
    
@@ -21,7 +22,7 @@
    height: fit-content;
 
    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-   margin-left: 45px;
+   /* margin-left: 45px; */
 }/* 
 .containers{
     width:95%;
@@ -32,6 +33,9 @@
     flex-wrap: wrap;
     margin-top:15px;
     margin-left: 100px;
+    width:90%;
+    /* border: 1px solid black; */
+    justify-content: space-around;
 }
 .containers{
     width: fit-content;
@@ -42,7 +46,7 @@
     z-index: -1;
     /* width: fit-content; */
     width: 15.5%;
-      height: 100%;
+      /* /height: 10%; */
     padding: 3px;
     height: 300px;
     background-color: rgba(255, 255, 255, 0.4);
@@ -73,4 +77,28 @@
 }
 .login{
     margin-left:1650px;
+}
+.pagination{
+     align-self:flex-end; 
+    padding-top:30px;
+    text-align: center;
+    margin-left:50%;
+}
+.pagination a{
+    margin-left:15px;
+    color: #00695c;
+    padding:5px;
+    border:1px solid #00695c
+    
+}
+.pagination a:hover,
+.pagination a:active {
+    background-color: #00695c;
+    color: white;
+}
+.card-text{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient:vertical ;
+    overflow: hidden;
 }
