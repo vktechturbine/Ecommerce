@@ -1,0 +1,27 @@
+.body{
+    text-align: center;
+}
+.book{
+    margin-left:20%;
+    margin-top:2%;
+    border: 2px solid black;
+    width:50%;
+    display: flex;
+    
+}
+.img{
+    width: fit-content;
+    /* height: 95%; */
+    border: 2px solid black;
+    padding: 50px;
+}
+.img img{
+    width: 400px;
+    height: 68%;
+}
+.text{
+    /* flex-wrap: wrap; */
+    width: fit-content;
+    border: 2px solid black;
+    padding: 50px;
+}

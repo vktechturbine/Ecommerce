@@ -1,0 +1,21 @@
+.form-container{
+    width: 20%;
+    margin-left: 50%;
+    margin-top:45px;
+}
+.img{
+
+    padding-top: 3px !important;
+
+    /* border: none !important;; */
+}
+.error h1{
+    color:red;
+    font-size: 20px;
+    text-align: center;
+
+}
+.mainerror{
+    display: flex;
+    margin-left:10px;
+}

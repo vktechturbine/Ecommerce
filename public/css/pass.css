@@ -1,0 +1,17 @@
+.login{
+    margin-left:1650px;
+}
+.container{
+    margin-left:35%;
+    margin-top:5%;
+    width: 500px;
+    border: 1px solid black;
+    padding: 25px;
+}
+.fields input,label,button{
+    width: 100%;
+
+    margin-top:2%;
+
+
+}
