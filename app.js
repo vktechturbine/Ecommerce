@@ -9,6 +9,10 @@ const flash = require('connect-flash');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
 const adminRoute = require('./routes/admin');
+
+const jwt = require('jsonwebtoken');
+const token = jwt.sign({ user: 'Vishal' }, 'secretKey');
+
 const multer = require('multer');
 
 const app = express();
@@ -44,7 +48,6 @@ const store = new MongoDBStore({
     collection: 'sessions'
 })
 
-
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }));
 app.use(flash());
 
@@ -58,7 +61,7 @@ app.use((request, response, next) => {
     User.findById(request.session.user._id).then(user => {
         //    console.log(user);
         request.user = user;
-
+        
         next();
         
     }).catch(error => {
@@ -78,6 +81,15 @@ app.use(multer({storage:fileStorage}).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/images",express.static(path.join(__dirname, 'images')));;
 
+
+app.use((request,response,next) => {
+    response.locals.isAuthenticate= request.session.isLoggedIn;
+    request.token = token;
+    response.locals.jwttoken = token;
+    console.log(response.locals.jwttoken)
+    console.log("response.locals.jwttoken")
+    next();
+})
 app.use("/admin", adminRoute.routes);
 app.use(shopRoute);
 app.use(loginRoute);

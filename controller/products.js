@@ -180,7 +180,6 @@ exports.getLogin = (request, response) => {
 
   response.render("adminRegister/adminLoginRegister.ejs", {
     path: path,
-    isAuthenticate: request.session.isLoggedIn,
     errorMessage: [],
     oldInput: {
       email: "",
@@ -303,6 +302,7 @@ exports.postLogin = (request, response) => {
           console.log(doMatch);
           if (doMatch) {
             request.session.isLoggedIn = true;
+            request.session.isJwtTokenValid = request.token;
             request.session.user = user;
             return request.session.save((error) => {
               console.log(error);
@@ -449,9 +449,9 @@ exports.getCart = (request, response, next) => {
     })
  */
 };
-exports.deletProduct = (request, response, next) => {
-  const productID = request.body.productId;
-  // console.log(productID)
+exports.deleteProduct = (request, response, next) => {
+  const productID = request.params.productId;
+  console.log(productID)
   Product.findOne({ _id: productID }).then((product) => {
     if (!product) {
       throw next(new Error("Product not found"));
@@ -460,11 +460,13 @@ exports.deletProduct = (request, response, next) => {
     return Product.deleteOne({ _id: productID })
       .then((result) => {
         console.log(result);
-        response.redirect("/admin/products");
-        response.redirect("/");
+        response.status(200).json({message:"Success!"})
+        // response.redirect("/admin/products");
+        // response.redirect("/");
       })
       .catch((error) => {
         console.log("Record Failed to Delete");
+        response.status(500).json({message:"Deleting Product Failed"});
       });
   });
 };

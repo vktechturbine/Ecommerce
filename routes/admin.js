@@ -30,7 +30,8 @@ body('desc').isLength({min:3,max:500}).withMessage('length of description should
 router.get("/products",Auth,productsData.getAdminProducts);
 router.get("/edit-product/:productId",Auth,productsData.getEditProduct);
 router.post("/editProduct",Auth,productsData.postEditData);
-router.post("/delete-product",Auth,productsData.deletProduct);
+// router.post("/delete-product",Auth,productsData.deletProduct);
+router.post('/products/:productId',Auth,productsData.deleteProduct);
 /*
 // /*
 // 
