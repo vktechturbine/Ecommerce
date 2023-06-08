@@ -10,6 +10,7 @@ const fileHelper = require("../utils/file");
 const pdfCreate = require("pdfkit");
 
 const image_per_page = 4;
+// const image_per_page = 4;
 
 const { validationResult } = require("express-validator");
 /* Sendgrid Email  */
