@@ -44,7 +44,7 @@
     <form action="<% if(!editing) { %>/admin/product<% }else{ %>/admin/editProduct<%}%>" method="post" enctype="multipart/form-data">
       <div class="form-container">
 
-      
+        <input type="hidden" name="jwtToken" value="<%=jwttoken%>">
         <div class="form-group">
           <label for="exampleInputEmail1">Title</label>
           <input type="text" class="form-control" id="exampleInputEmail1" value="<% if(editing) {%><%=products.title%><%}else{%><%}%>" aria-describedby="emailHelp" name="title">

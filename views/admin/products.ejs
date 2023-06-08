@@ -57,9 +57,11 @@
             <p class="card-text"><%= prods.desc %></p>
             <div class="item">
               <a href="/admin/edit-product/<%=prods._id%>?edit=true"class="btn btn-primary" name="product" value="<%=prods._id%>">Edit</a>
+              <input type="hidden" name="jsonToken" value="<%=jwttoken%>">
               <input type="hidden" name="productId" value="<%=prods._id%>">
-              <button class="btn btn-primary"  value="<%=prods._id%>"onclick="deleteFunction(this);">Delete</button>
-              <!-- <form action="/admin/delete-product" method="POST">
+              <!-- <a href="/admin/products/<%=prods._id%>" data-method="delete" onclick="deleteFunction(this)" class="btn btn-primary">Delete</a> -->
+              <button class="btn btn-primary" type="button" onclick="deleteFunction(this);">Delete</button>
+              <!-- <form action="/admin/products/<%=prods._id%>" method="POST">
               </form> -->
             </div>
           </div>
