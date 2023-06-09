@@ -36,6 +36,7 @@
     "pdfkit": "^0.13.0",
     "req-flash": "^0.0.3",
     "sequelize": "^6.31.1",
+    "stripe": "^12.8.0",
     "tiny-csrf": "^1.1.3"
   }
 }
