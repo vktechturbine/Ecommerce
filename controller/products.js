@@ -8,7 +8,7 @@ const { error } = require("console");
 const bcrypt = require("bcryptjs");
 const fileHelper = require("../utils/file");
 const pdfCreate = require("pdfkit");
-
+const stripe = require('stripe')('sk_test_51NGgJySE2X0xZxAimZGwVKqBpDXBfMTbZOC9pQbU1QENdV09zKJoCAdqapvj8DEhmCHnJxz7Mo48TzIWc1AwTtUy00ITMC6nK3');
 const image_per_page = 4;
 // const image_per_page = 4;
 
@@ -84,21 +84,21 @@ exports.getAdminProducts = (request, response) => {
     totalNumber_of_products = numberOfProducts;
     return Product.find().skip((page - 1) * image_per_page).limit(image_per_page);
   }).then((products) => {
-      // console.log(products);
-      response.render("admin/products.ejs", {
-        products: products,
-        path: path,
-        error: false,
-        pageTitle: "Shop",
-        totalProducts: totalNumber_of_products,
-        hasNextProdut: image_per_page * page < totalNumber_of_products,
-        hasPreviousPage: page > 1,
-        nextPage: page + 1,
-        previousPage: page - 1,
-        lastPage: Math.ceil(totalNumber_of_products / image_per_page),
-        currentPage: page,
-      });
-    })
+    // console.log(products);
+    response.render("admin/products.ejs", {
+      products: products,
+      path: path,
+      error: false,
+      pageTitle: "Shop",
+      totalProducts: totalNumber_of_products,
+      hasNextProdut: image_per_page * page < totalNumber_of_products,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalNumber_of_products / image_per_page),
+      currentPage: page,
+    });
+  })
     .catch((error) => {
       console.log(error);
     });
@@ -461,13 +461,13 @@ exports.deleteProduct = (request, response, next) => {
     return Product.deleteOne({ _id: productID })
       .then((result) => {
         console.log(result);
-        response.status(200).json({message:"Success!"})
+        response.status(200).json({ message: "Success!" })
         // response.redirect("/admin/products");
         // response.redirect("/");
       })
       .catch((error) => {
         console.log("Record Failed to Delete");
-        response.status(500).json({message:"Deleting Product Failed"});
+        response.status(500).json({ message: "Deleting Product Failed" });
       });
   });
 };
@@ -549,17 +549,67 @@ exports.postOrders = (request, response) => {
       return request.user.clearCartItems();
     })
     .then((result) => {
-      response.redirect("/");
+      response.redirect("/order");
     })
     .catch((error) => console.log(error));
 };
 exports.getCheckout = (request, response, next) => {
   const path = request.url;
-  response.render("shop/checkout.ejs", {
-    pageTitle: "Checkout",
-    path: path,
-    isAuthenticate: request.isLoggedin,
-  });
+  let products;
+  let total = 0;
+  request.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      products = user.cart.items;
+      for (let product of products) {
+        total = total + product.productId.price * product.quantity;
+      }
+      return stripe.checkout.sessions.create({
+        // payment_method_types :['card'],
+        // line_items: [
+        //   {
+        //     price_data: {
+        //       currency: 'inr',
+        //       product_data: {
+        //         name: 'T-shirt',
+        //       },
+        //       unit_amount: 2000,
+        //     },
+        //     quantity: 1,
+        //   },
+        // ],   
+        line_items: products.map(p => {
+          const productPrice = p.productId.price * 82.47;
+          return {
+            price_data: {
+              currency: 'inr',
+              product_data: {
+                name: p.productId.title,
+              },
+              unit_amount: p.productId.price *100,
+            },
+            quantity: p.quantity,
+          };
+        }),
+        mode: 'payment',
+        success_url: request.protocol + '://' + request.get('host') + '/checkout/success',
+        cancel_url: request.protocol + '://' + request.get('host') + '/checkout/cancel',
+      });
+      // console.log(price)
+
+
+    }).then(session => {
+      response.render("shop/checkout.ejs", {
+        products: products,
+        path: path,
+        error: false,
+        pageTitle: "Cart",
+        subtotal: total,
+        sessionId: session.id
+      })
+    }).catch((error) => {
+      console.log(error);
+    });
 };
 exports.getIndex = (request, response, next) => {
   const path = request.url;
