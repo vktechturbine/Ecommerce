@@ -43,8 +43,8 @@ const fileFilter = (req, file, cb) => {
         cb(null, false);
     }
 }
-const privateKey = fs.readFileSync('server.key');
-const certificate = fs.readFileSync('server.cert');
+/* const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert'); */
 app.set('view engine', 'ejs')
 
 app.set('views', 'views');
@@ -110,8 +110,9 @@ app.use(loginRoute);
 
 mongoose.connect(Mongouri).then(result => {
     
+    // https.createServer({key:privateKey,cert:certificate},app)
    
-    https.createServer({key:privateKey,cert:certificate},app).listen(process.env.PORT || 3000, error => {
+   app.listen(process.env.PORT || 3000, error => {
         console.log(error);
     });
 
