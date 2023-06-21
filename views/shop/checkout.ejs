@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/cart.css">
     <title>CheckOut</title>
 </head>
 <body>
@@ -38,7 +39,49 @@
           </ul>
         </div>
     </nav>
-    <h1>Welcome To CheckOut</h1>
+    <div class="container">
+      <%if(products.length > 0) {%>
+      <div class="main-cart">
+        <h2>CheckOut</h2>
+
+          <% for(let product of products) { %>
+            <div class="cart-item">
+              <img width="100px" height="150px" src="<%=product.productId.image%>" alt="">
+              <h3 class="space" style="width: 200px"><%=product.productId.title%></h3>
+              <h5 class="space">Qty <%=product.quantity%></h5>
+              
+              <h5 class="space">₹<%=product.productId.price%>
+                <br>
+                <form action="/cart-delete-item" method="POST">
+                    <button type="submit" class="btn btn-link" name="productID" value="<%=product.productId._id%>">remove</button>
+                  </form>
+                  </h5>
+            </div>
+            <% } %>
+            <hr>
+            <h5 class="total">subtotal ₹<%=subtotal%></h5>
+            <div class="order-button">
+              <form>
+                <a href="/cart" class="btn btn-dark">Back</a>
+                <button  id="order" class="btn btn-warning">Order</button>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script>
+                  var stripe = Stripe('pk_test_51NGgJySE2X0xZxAiZnPhtKgnJzVs4SfT8evGsQSKymhEEF2Wmj9araDFIuiYr9JIrMrkZ991acsUq4kKjOZMH7G900O6bIG7qD');
+                  var order_button = document.getElementById('order');
+                  console.log(order_button);
+                  order_button.addEventListener('click', function() {
+                    stripe.redirectToCheckout({
+                        sessionId:'<%=sessionId%>'
+                    })
+                  })
+                </script>
+              </form>
+            </div>
+          </div>
+          <% }  else {%>
+           <h1>No More Products</h1>
+           <% } %>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>    
