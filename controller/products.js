@@ -8,7 +8,8 @@ const { error } = require("console");
 const bcrypt = require("bcryptjs");
 const fileHelper = require("../utils/file");
 const pdfCreate = require("pdfkit");
-const stripe = require('stripe')('sk_test_51NGgJySE2X0xZxAimZGwVKqBpDXBfMTbZOC9pQbU1QENdV09zKJoCAdqapvj8DEhmCHnJxz7Mo48TzIWc1AwTtUy00ITMC6nK3');
+//stripe key => sk_test_51NGgJySE2X0xZxAimZGwVKqBpDXBfMTbZOC9pQbU1QENdV09zKJoCAdqapvj8DEhmCHnJxz7Mo48TzIWc1AwTtUy00ITMC6nK3
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 const image_per_page = 4;
 // const image_per_page = 4;
 
