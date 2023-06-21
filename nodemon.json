@@ -1,7 +1,8 @@
 {
     "env":{
+        "PORT":3000,
         "MONGO_USER":"Vishalrk",
-        "MONGO_PASSWORD":"tech1mini",
+        "MONGO_PASSWORD":"Tech1mini@12345",
         "MONGO_DEFAULT_DB":"test",
         "STRIPE_KEY":"sk_test_51NGgJySE2X0xZxAimZGwVKqBpDXBfMTbZOC9pQbU1QENdV09zKJoCAdqapvj8DEhmCHnJxz7Mo48TzIWc1AwTtUy00ITMC6nK3"
     }
