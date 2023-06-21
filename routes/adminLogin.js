@@ -17,8 +17,7 @@ router.post('/checkLogin',[check('email').isEmail().withMessage("please enter va
 }).trim(),body('password').custom((value,{req} )=> {
     return User.findOne({email:req.body.email}).then(user => {
         return bcrypt.compare(value, user.password)
-       /*  if(user.password !== req.body.password){
-    } */
+      
     
     
 }).then(match => {
@@ -31,10 +30,7 @@ router.post('/checkLogin',[check('email').isEmail().withMessage("please enter va
 }).trim()
 ],productsData.postLogin);
 router.post('/admin/adduser',[check('email').isEmail().withMessage("please enter valid email").custom((value,{req}) => {
-    /* if(value === 'test@test.com'){
-        throw new Error("This Email address is Forbidden");
-    }
-    return true; */
+   
     return User.findOne({email:value}).then(userDoc => {
         if(userDoc)
         {

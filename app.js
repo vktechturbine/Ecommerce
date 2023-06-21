@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
-
+const fs = require('fs');
+const https = require('https');
 
 const session = require("express-session");
 
@@ -15,15 +16,18 @@ const token = jwt.sign({ user: 'Vishal' }, 'secretKey');
 
 const multer = require('multer');
 
-const app = express();
-
 const shopRoute = require('./routes/shop');
 
 const loginRoute = require('./routes/adminLogin');
 const User = require('./models/user');
 
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
+
+const app = express();
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');
@@ -39,9 +43,20 @@ const fileFilter = (req, file, cb) => {
         cb(null, false);
     }
 }
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert');
+app.set('view engine', 'ejs')
 
+app.set('views', 'views');
 
-const Mongouri = 'mongodb://localhost:27017/online_shop';
+const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined',{stream:accessLogStream}));
+//mongodb+srv://Vishalrk:<password>@cluster0.y1iwedf.mongodb.net/
+
+const Mongouri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.y1iwedf.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const store = new MongoDBStore({
     uri: Mongouri,
@@ -52,14 +67,14 @@ app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, 
 app.use(flash());
 
 console.log("CSRF ==> ");
-// request.session.user._id  = null;
+
 app.use((request, response, next) => {
     
     if (!request.session.user) {
         return next();
     }
     User.findById(request.session.user._id).then(user => {
-        //    console.log(user);
+       
         request.user = user;
         
         next();
@@ -71,13 +86,10 @@ app.use((request, response, next) => {
     
 })
 
-app.set('view engine', 'ejs')
-
-app.set('views', 'views');
 
 
 app.use(multer({storage:fileStorage}).single('image'));
-/* app.use(express.static('public')); */
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/images",express.static(path.join(__dirname, 'images')));;
 
@@ -97,27 +109,9 @@ app.use(loginRoute);
 
 
 mongoose.connect(Mongouri).then(result => {
-    console.log(result)
-    /*     User.findOne().then((user) => {
-            if(!user)
-            {
-                const user = new User( {
-                    name : "Vishal",
-                    email:"vishalkerlekar5@gmail.com",
-                    password:"tech1mini",
-                    cart:{
-                        items:[]
-                    }
-                });
-                user.save();
-            }
-        }).catch(error => {
-            console.log(error);
-        })
-        ,function() {
-            console.log("server")
-        }); */
-    app.listen(3000, error => {
+    
+   
+    https.createServer({key:privateKey,cert:certificate},app).listen(process.env.PORT || 3000, error => {
         console.log(error);
     });
 
